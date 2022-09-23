@@ -1,0 +1,25 @@
+{
+    "name": "gam6itko/php-s-shot",
+    "authors": [
+        {
+            "name": "gam6itko",
+            "email": "gam6itko@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gam6itko\\SShot\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Gam6itko\\SShot\\": "tests/"
+        }
+    }
+}
