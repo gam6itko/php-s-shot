@@ -39,22 +39,31 @@ class UrlBuilderTest extends TestCase
             'https://api.s-shot.ru/API_KEY/1280/200/?https://google.com',
         ];
 
+        $options = [
+            'resolution' => '1024x768',
+            'size' => '400',
+            'format' => 'jpeg',
+            'scale' => 100,
+            'timeout' => 2,
+            'delay' => 3,
+            'jsSupport' => true,
+            'flashSupport' => true,
+            'proxy' => 'proxy.com:8080',
+            'cookies' => 'CookieString',
+            'referer' => 'my-site.ru',
+            'userAgent' => 'Internet Explorer 3.0',
+        ];
+        $expectedAll = 'https://api.s-shot.ru/API_KEY/1024x768/400/JPEG/Z100/T2/D3/JS1/FS0/PX(proxy.com:8080)/CK(CookieString)/RF(my-site.ru)/UA(Internet Explorer 3.0)/?https://google.com';
+        yield 'right order' => [$options, $expectedAll];
+        yield 'wrong order' => [array_reverse($options), $expectedAll];
+        unset($options, $expectedAll);
+
         yield [
             [
-                'resolution' => '1024x768',
-                'size' => '400',
-                'format' => 'jpeg',
-                'scale' => 100,
-                'timeout' => 2,
-                'delay' => 3,
-                'jsSupport' => true,
-                'flashSupport' => true,
-                'proxy' => 'proxy.com:8080',
-                'cookies' => 'CookieString',
-                'referer' => 'my-site.ru',
-                'userAgent' => 'Internet Explorer 3.0',
+                'jsSupport' => false,
+                'flashSupport' => false,
             ],
-            'https://api.s-shot.ru/API_KEY/1024x768/400/JPEG/Z100/T2/D3/JS1/FS0/PX(proxy.com:8080)/CK(CookieString)/RF(my-site.ru)/UA(Internet Explorer 3.0)/?https://google.com'
+            'https://api.s-shot.ru/API_KEY/?https://google.com',
         ];
     }
 
@@ -86,5 +95,28 @@ class UrlBuilderTest extends TestCase
                 'jpeg' => 'tiff',
             ],
         ];
+    }
+
+    public function testDefaultOptions()
+    {
+        $defaultOptions = [
+            'resolution' => '1024x768',
+            'size' => 100,
+            'format' => 'jpeg',
+            'scale' => 100,
+
+        ];
+        $options = [
+            // rewrite
+            'size' => 400,
+            'scale' => 400,
+            // new
+            'timeout' => 4,
+            'delay' => 4,
+        ];
+        self::assertEquals(
+            'https://api.s-shot.ru/API_KEY/1024x768/400/JPEG/Z400/T4/D4/?https://google.com',
+            (new UrlBuilder('API_KEY', $defaultOptions))->build('https://google.com', $options)
+        );
     }
 }

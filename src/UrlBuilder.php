@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Gam6itko\SShot;
 
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\ResponseInterface;
-
 class UrlBuilder
 {
     private const HOST = 'https://api.s-shot.ru';
@@ -15,8 +11,8 @@ class UrlBuilder
     private const OPTIONS = [
         'resolution',
         'size',
-        'scale',
         'format', //JPEG,PNG
+        'scale',
         'timeout',
         'delay',
         'jsSupport',
@@ -41,23 +37,27 @@ class UrlBuilder
      */
     public function build(string $url, array $options = []): string
     {
-        $this->validateOptions(array_merge($this->defaultOptions, $options));
+        $options = array_merge($this->defaultOptions, $options);
+        $this->validateOptions($options);
 
         $parts = [
             self::HOST,
             $this->apiKey,
         ];
 
-        foreach ($options as $key => $value) {
-            $parts[] = $this->normalizeOptionValue($key, (string) $value);
+        // should be right order
+        foreach (self::OPTIONS as $name) {
+            if (isset($options[$name])) {
+                $parts[] = $this->normalizeOptionValue($name, (string) $options[$name]);
+            }
         }
 
         $parts[] = "?$url";
 
-        return implode('/', $parts);
+        return implode('/', array_filter($parts));
     }
 
-    private function normalizeOptionValue(string $key, string $value): string
+    private function normalizeOptionValue(string $key, string $value): ?string
     {
         switch ($key) {
             case 'format':
@@ -69,9 +69,9 @@ class UrlBuilder
             case 'delay':
                 return "D$value";
             case 'jsSupport':
-                return 'JS1';
+                return $value ? 'JS1' : null;
             case 'flashSupport':
-                return 'FS0';
+                return $value ? 'FS0' : null;
             case 'proxy':
                 return "PX($value)";
             case 'cookies':
