@@ -79,7 +79,7 @@ class UrlBuilder
             case 'referer':
                 return "RF($value)";
             case 'userAgent':
-                return "UA($value)";
+                return sprintf('UA(%s)', urlencode($value));
             default:
                 return $value;
         }

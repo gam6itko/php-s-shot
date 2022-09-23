@@ -53,7 +53,7 @@ class UrlBuilderTest extends TestCase
             'referer' => 'my-site.ru',
             'userAgent' => 'Internet Explorer 3.0',
         ];
-        $expectedAll = 'https://api.s-shot.ru/API_KEY/1024x768/400/JPEG/Z100/T2/D3/JS1/FS0/PX(proxy.com:8080)/CK(CookieString)/RF(my-site.ru)/UA(Internet Explorer 3.0)/?https://google.com';
+        $expectedAll = 'https://api.s-shot.ru/API_KEY/1024x768/400/JPEG/Z100/T2/D3/JS1/FS0/PX(proxy.com:8080)/CK(CookieString)/RF(my-site.ru)/UA(Internet+Explorer+3.0)/?https://google.com';
         yield 'right order' => [$options, $expectedAll];
         yield 'wrong order' => [array_reverse($options), $expectedAll];
         unset($options, $expectedAll);
