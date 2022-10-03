@@ -8,7 +8,8 @@ api client for https://www.s-shot.ru/ API
 $builder = new UrlBuilder('API_KEY');
 $builder->build('https://google.com', [
     'resolution' => '1024x768',
-    'size' => '400',
+    //or 'resolution' => '1024',
+    'size' => 400,
     'format' => 'jpeg',
     'scale' => 100,
     'timeout' => 2,
